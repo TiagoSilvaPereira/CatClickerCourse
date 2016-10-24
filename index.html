@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <title>Cat Clicker</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div class="cat-list" id="cat-list">
+    </div>
+    
+    <div id="view-area">
+        <div class="cat-container" id="cat">
+            <img id="cat-image" class="cat">
+            <span id="cat-name" class="name"></span>
+            <span id="cat-clicks" class="clicks"></span>
+        </div>
+    </div>
+    
+    <script src="cat.js"></script>
+    <script>
+
+        var cats = [{
+            'name': 'Cute Little Cat'
+        },{
+            'name': 'Sherlock Cat'
+        },{
+            'name': 'Two Bros'
+        }],
+
+        catsObj = [];
+
+        for (var i = 0; i < cats.length; i++) {
+            catsObj[i] = new Cat({
+                'name': cats[i].name,
+                'id': i+1
+            });
+            
+            catsObj[i].addCatToList();
+        }
+
+        catsObj[0].selectAndShowCat();
+
+    </script>
+</body>
+</html>
