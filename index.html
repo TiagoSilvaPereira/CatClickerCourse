@@ -18,29 +18,5 @@
     </div>
     
     <script src="cat.js"></script>
-    <script>
-
-        var cats = [{
-            'name': 'Cute Little Cat'
-        },{
-            'name': 'Sherlock Cat'
-        },{
-            'name': 'Two Bros'
-        }],
-
-        catsObj = [];
-
-        for (var i = 0; i < cats.length; i++) {
-            catsObj[i] = new Cat({
-                'name': cats[i].name,
-                'id': i+1
-            });
-            
-            catsObj[i].addCatToList();
-        }
-
-        catsObj[0].selectAndShowCat();
-
-    </script>
 </body>
 </html>

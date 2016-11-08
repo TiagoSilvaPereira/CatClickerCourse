@@ -1,109 +1,101 @@
-var Cat = function(options) {
+var model = {
+    currentCat: null,
+    cats: [{
+        'name': 'Cute Little Cat',
+        'clicks': 0,
+        'image': 'cat1.jpg'
+    },{
+        'name': 'Sherlock Cat',
+        'clicks': 0,
+        'image': 'cat2.jpg'
+    },{
+        'name': 'Two Bros',
+        'clicks' :0,
+        'image': 'cat3.jpg'
+    }]
+};
 
-    this.options = options;
-    this.clicks = 0;
+var controller = {
+    init: function() {
+        model.currentCat = model.cats[0];
 
-    this.addCatToList = addCatToList;
-    this.selectAndShowCat = selectAndShowCat;
-    this.increaseClicks = increaseClicks;
-    this.createCat = createCat;
-    this.showCat = showCat;
-    this.setName = setName;
-    this.setImage = setImage;
-    this.setClicks = setClicks;
-    this.createName = createName;
-    this.createImage = createImage;
-    this.createClicks = createClicks;
+        catListView.init();
+        catView.init();
+    },
 
-    function addCatToList() {
-        var list = document.getElementById('cat-list');
-        var div = document.createElement('div');
-        div.className = 'cat-list-item';
-        div.id = 'cat-' + this.options.id;
+    getCurrentCat: function() {
+        return model.currentCat;
+    },
 
-        div.insertAdjacentHTML('afterbegin', '<img src="cat' + this.options.id + '.jpg" class="cat-list-img">');
+    getCats: function() {
+        return model.cats;
+    },
 
-        div.addEventListener('click', function() {
+    setCurrentCat: function(cat) {
+        model.currentCat = cat;
+    },
 
-                this.selectAndShowCat();
-
-        }.bind(this));
-
-        list.appendChild(div);
+    incrementCounter: function() {
+        model.currentCat.clicks++;
+        catView.render();
     }
-
-    function selectAndShowCat() {
-        this.createCat();
-        this.showCat();
-    }
-
-    function createCat() {
-        var cat = document.getElementById('cat'),
-            viewArea = document.getElementById('view-area'),
-            image = this.createImage(),
-            name = this.createName(),
-            clicks = this.createClicks();
-
-        cat.outerHTML = '';
-        delete cat;
-
-        cat = document.createElement('div');
-        cat.className = 'cat-container';
-        cat.id = 'cat';
-
-        cat.appendChild(image);
-        cat.appendChild(name);
-        cat.appendChild(clicks);
-
-        cat.addEventListener('click', function() {
-            this.increaseClicks();
-        }.bind(this));
-
-        viewArea.appendChild(cat);
-    }
-
-    function showCat() {
-        this.setName();
-        this.setImage();
-        this.setClicks();
-    }
-
-    function increaseClicks() {
-        this.clicks++;
-        this.setClicks();
-    }
-
-    function setName() {
-        document.getElementById('cat-name-' + this.options.id).innerHTML = this.options.name;
-    }
-
-    function setImage() {
-        document.getElementById('cat-image-' + this.options.id).src = 'cat' + this.options.id + '.jpg';
-    }
-
-    function setClicks() {
-        document.getElementById('cat-clicks-' + this.options.id).innerHTML = this.clicks;
-    }
-
-    function createImage() {
-        var element = document.createElement('img');
-        element.className = 'cat';
-        element.id = 'cat-image-' + this.options.id;
-        return element;
-    }
-
-    function createName() {
-        var element = document.createElement('span');
-        element.className = 'name';
-        element.id = 'cat-name-' + this.options.id;
-        return element;
-    }
-
-    function createClicks() {
-        var element = document.createElement('span');
-        element.className = 'clicks';
-        element.id = 'cat-clicks-' + this.options.id;
-        return element;
-    }
-
 }
+
+var catView = {
+
+    init: function() {
+        this.catElem = document.getElementById('cat');
+        this.catNameElem = document.getElementById('cat-name');
+        this.catImageElem = document.getElementById('cat-image');
+        this.catClicksElem = document.getElementById('cat-clicks');
+
+        this.catElem.addEventListener('click', function() {
+            controller.incrementCounter();
+            catView.render();
+        });
+
+        this.render();
+    },
+
+    render: function() {
+        var currentCat = controller.getCurrentCat();
+        this.catClicksElem.textContent = currentCat.clicks;
+        this.catNameElem.textContent = currentCat.name;
+        this.catImageElem.src = currentCat.image;
+    }
+}
+
+var catListView = {
+    init: function() {
+        this.catListElem = document.getElementById('cat-list');
+
+        this.render();
+    },
+
+    render: function() {
+        var cat, elem, i;
+        var cats = controller.getCats();
+
+        this.catListElem.innerHTML = '';
+
+        for(i = 0; i < cats.length; i++) {
+            cat = cats[i];
+
+            var div = document.createElement('div');
+            div.className = 'cat-list-item';
+
+            div.insertAdjacentHTML('afterbegin', '<img src="' + cat.image + '" class="cat-list-img">');
+
+            div.addEventListener('click', (function(catCopy) {
+                return function() {
+                    controller.setCurrentCat(catCopy);
+                    catView.render();
+                };
+            })(cat));
+
+            this.catListElem.appendChild(div);
+        }
+    }
+}
+
+controller.init();
