@@ -20,6 +20,7 @@ var controller = {
         model.currentCat = model.cats[0];
 
         catListView.init();
+        adminView.init();
         catView.init();
     },
 
@@ -38,6 +39,19 @@ var controller = {
     incrementCounter: function() {
         model.currentCat.clicks++;
         catView.render();
+    },
+
+    showEditView: function() {
+        adminView.show();
+    },
+
+    saveCat: function() {
+        model.currentCat.name = document.getElementById('name-input').value;
+        model.currentCat.image = document.getElementById('image-input').value;
+        model.currentCat.clicks = document.getElementById('clicks-input').value;
+
+        catView.render();
+        adminView.hide();
     }
 }
 
@@ -49,9 +63,15 @@ var catView = {
         this.catImageElem = document.getElementById('cat-image');
         this.catClicksElem = document.getElementById('cat-clicks');
 
+        this.editButton = document.getElementById('edit-button');
+
         this.catElem.addEventListener('click', function() {
             controller.incrementCounter();
             catView.render();
+        });
+
+        this.editButton.addEventListener('click', function() {
+            controller.showEditView();
         });
 
         this.render();
@@ -62,6 +82,7 @@ var catView = {
         this.catClicksElem.textContent = currentCat.clicks;
         this.catNameElem.textContent = currentCat.name;
         this.catImageElem.src = currentCat.image;
+        adminView.render();
     }
 }
 
@@ -95,6 +116,45 @@ var catListView = {
 
             this.catListElem.appendChild(div);
         }
+    }
+}
+
+var adminView = {
+    init: function() {
+        this.nameInput = document.getElementById('name-input');
+        this.imageInput = document.getElementById('image-input');
+        this.clicksInput = document.getElementById('clicks-input');
+        this.editArea = document.getElementById('edit-area');
+
+        this.cancelButton = document.getElementById('cancel-button');
+        this.saveButton = document.getElementById('save-button');
+
+        this.cancelButton.addEventListener('click', function() {
+            this.hide();
+        }.bind(this));
+
+        this.saveButton.addEventListener('click', function() {
+            controller.saveCat();
+        });
+    },
+
+    render: function() {
+        var currentCat = controller.getCurrentCat();
+
+        this.hide();
+
+        this.nameInput.value = currentCat.name;
+        this.imageInput.value = currentCat.image;
+        this.clicksInput.value = currentCat.clicks;
+    },
+
+    show: function() {
+        this.render();
+        this.editArea.style.display = 'inline-block';
+    },
+
+    hide: function() {
+        this.editArea.style.display = 'none';
     }
 }
 

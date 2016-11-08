@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Cat Clicker</title>
@@ -14,6 +14,17 @@
             <img id="cat-image" class="cat">
             <span id="cat-name" class="name"></span>
             <span id="cat-clicks" class="clicks"></span>
+        </div>
+
+        <div id="admin-area">
+            <button id="edit-button">Edit</button>
+            <div id="edit-area">
+                <input type="text" name="name" id="name-input" placeholder="Name">
+                <input type="text" name="image" id="image-input" placeholder="Image URL">
+                <input type="number" name="clicks" id="clicks-input" placeholder="Clicks">
+                <button id="cancel-button">Cancel</button>
+                <button id="save-button">Save</button>
+            </div>
         </div>
     </div>
     
